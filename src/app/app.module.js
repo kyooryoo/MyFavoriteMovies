@@ -9,7 +9,11 @@ var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var movie_detail_component_1 = require("./movie-detail.component");
+var movies_component_1 = require("./movies.component");
+var dashboard_component_1 = require("./dashboard.component");
 var app_component_1 = require("./app.component");
+var movie_service_1 = require("./movie.service");
+var app_routing_module_1 = require("./app-routing.module");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -20,10 +24,16 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
+            app_routing_module_1.AppRoutingModule,
         ],
         declarations: [
             app_component_1.AppComponent,
+            dashboard_component_1.DashboardComponent,
             movie_detail_component_1.MovieDetailComponent,
+            movies_component_1.MoviesComponent,
+        ],
+        providers: [
+            movie_service_1.MovieService,
         ],
         bootstrap: [app_component_1.AppComponent]
     })

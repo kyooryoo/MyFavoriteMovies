@@ -9,10 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
+var common_1 = require("@angular/common");
+require("rxjs/add/operator/switchMap");
 var movie_1 = require("./movie");
+var movie_service_1 = require("./movie.service");
 var MovieDetailComponent = (function () {
-    function MovieDetailComponent() {
+    function MovieDetailComponent(movieService, route, location) {
+        this.movieService = movieService;
+        this.route = route;
+        this.location = location;
     }
+    MovieDetailComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.route.paramMap
+            .switchMap(function (params) { return _this.movieService.getMovie(+params.get('id')); })
+            .subscribe(function (movie) { return _this.movie = movie; });
+    };
+    MovieDetailComponent.prototype.goBack = function () {
+        this.location.back();
+    };
     return MovieDetailComponent;
 }());
 __decorate([
@@ -22,8 +38,12 @@ __decorate([
 MovieDetailComponent = __decorate([
     core_1.Component({
         selector: 'movie-detail',
-        template: "\n    <div *ngIf=\"movie\">\n        <h2>{{movie.name}} details!</h2>\n        <div><label>id: </label>{{movie.id}}</div>\n        <div>\n            <label>name: </label>\n            <input \n                class=\"input\"\n                [(ngModel)]=\"movie.name\" \n                placeholder=\"name\"\n            />\n        </div>\n        <div>\n            <label>year: </label>\n            <input \n                class=\"input\"\n                [(ngModel)]=\"movie.year\" \n                placeholder=\"year\"\n            />\n        </div>\n    </div>\n    "
-    })
+        templateUrl: './movie-detail.component.html',
+        styleUrls: ['./movie-detail.component.css'],
+    }),
+    __metadata("design:paramtypes", [movie_service_1.MovieService,
+        router_1.ActivatedRoute,
+        common_1.Location])
 ], MovieDetailComponent);
 exports.MovieDetailComponent = MovieDetailComponent;
 //# sourceMappingURL=movie-detail.component.js.map

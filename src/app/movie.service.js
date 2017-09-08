@@ -16,9 +16,13 @@ var MovieService = (function () {
     MovieService.prototype.getMoviesSlowly = function () {
         var _this = this;
         return new Promise(function (resolve) {
-            //Simulate server latency with 5 second delay
-            setTimeout(function () { return resolve(_this.getMovies()); }, 5000);
+            //Simulate server latency with 2 second delay
+            setTimeout(function () { return resolve(_this.getMovies()); }, 2000);
         });
+    };
+    MovieService.prototype.getMovie = function (id) {
+        return this.getMovies()
+            .then(function (movies) { return movies.find(function (movie) { return movie.id === id; }); });
     };
     return MovieService;
 }());

@@ -1,0 +1,15 @@
+<h2>My Favorite Movies</h2>
+<ul class="movies">
+    <li *ngFor="let movie of movies"
+        [class.selected]="movie === selectedMovie"
+        (click)="onSelect(movie)">
+        <span class="badge">{{movie.id}}</span>
+        {{movie.name}} ({{movie.year}})
+    </li>
+</ul>
+<div *ngIf="selectedMovie">
+    <h2>
+        {{selectedMovie.name | uppercase}} is my favorite
+    </h2>
+    <button (click)="gotoDetail()">View Details</button>
+</div>

@@ -8,12 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
-var movie_detail_component_1 = require("./movie-detail.component");
-var movies_component_1 = require("./movies.component");
-var dashboard_component_1 = require("./dashboard.component");
-var app_component_1 = require("./app.component");
-var movie_service_1 = require("./movie.service");
+var http_1 = require("@angular/http");
 var app_routing_module_1 = require("./app-routing.module");
+//imports for loading & configuring in-memory web api
+var angular_in_memory_web_api_1 = require("angular-in-memory-web-api");
+var in_memory_data_service_1 = require("./in-memory-data.service");
+var app_component_1 = require("./app.component");
+var dashboard_component_1 = require("./dashboard.component");
+var movies_component_1 = require("./movies.component");
+var movie_detail_component_1 = require("./movie-detail.component");
+var movie_service_1 = require("./movie.service");
+var movie_search_component_1 = require("./movie-search.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -24,6 +29,8 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
+            http_1.HttpModule,
+            angular_in_memory_web_api_1.InMemoryWebApiModule.forRoot(in_memory_data_service_1.InMemoryDataService),
             app_routing_module_1.AppRoutingModule,
         ],
         declarations: [
@@ -31,11 +38,10 @@ AppModule = __decorate([
             dashboard_component_1.DashboardComponent,
             movie_detail_component_1.MovieDetailComponent,
             movies_component_1.MoviesComponent,
+            movie_search_component_1.MovieSearchComponent,
         ],
-        providers: [
-            movie_service_1.MovieService,
-        ],
-        bootstrap: [app_component_1.AppComponent]
+        providers: [movie_service_1.MovieService],
+        bootstrap: [app_component_1.AppComponent],
     })
 ], AppModule);
 exports.AppModule = AppModule;

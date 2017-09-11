@@ -5,29 +5,68 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var core_1 = require("@angular/core");
-var mock_movies_1 = require("./mock-movies");
+var http_1 = require("@angular/http");
+require("rxjs/add/operator/toPromise");
 var MovieService = (function () {
-    function MovieService() {
+    function MovieService(http) {
+        this.http = http;
+        this.headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        this.moviesUrl = 'api/movies'; //URL to web api
     }
     MovieService.prototype.getMovies = function () {
-        return Promise.resolve(mock_movies_1.MOVIES);
+        return this.http.get(this.moviesUrl)
+            .toPromise()
+            .then(function (response) { return response.json().data; })
+            .catch(this.handleError);
     };
-    MovieService.prototype.getMoviesSlowly = function () {
-        var _this = this;
-        return new Promise(function (resolve) {
-            //Simulate server latency with 2 second delay
-            setTimeout(function () { return resolve(_this.getMovies()); }, 2000);
-        });
-    };
+    // getMoviesSlowly(): Promise<Movie[]> {
+    //     return new Promise(resolve => {
+    //         //Simulate server latency with 2 second delay
+    //         setTimeout(() => resolve(this.getMovies()), 2000);
+    //     });
+    // }
     MovieService.prototype.getMovie = function (id) {
-        return this.getMovies()
-            .then(function (movies) { return movies.find(function (movie) { return movie.id === id; }); });
+        var url = this.moviesUrl + "/" + id;
+        return this.http.get(url)
+            .toPromise()
+            .then(function (response) { return response.json().data; })
+            .catch(this.handleError);
+    };
+    MovieService.prototype.update = function (movie) {
+        var url = this.moviesUrl + "/" + movie.id;
+        return this.http
+            .put(url, JSON.stringify(movie), { headers: this.headers })
+            .toPromise()
+            .then(function () { return movie; })
+            .catch(this.handleError);
+    };
+    MovieService.prototype.create = function (name, year) {
+        return this.http
+            .post(this.moviesUrl, JSON.stringify({ name: name, year: year }), { headers: this.headers })
+            .toPromise()
+            .then(function (res) { return res.json().data; })
+            .catch(this.handleError);
+    };
+    MovieService.prototype.delete = function (id) {
+        var url = this.moviesUrl + "/" + id;
+        return this.http.delete(url, { headers: this.headers })
+            .toPromise()
+            .then(function () { return null; })
+            .catch(this.handleError);
+    };
+    MovieService.prototype.handleError = function (error) {
+        console.error('An error occured', error); // for demo purpose only
+        return Promise.reject(error.message || error);
     };
     return MovieService;
 }());
 MovieService = __decorate([
-    core_1.Injectable()
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [http_1.Http])
 ], MovieService);
 exports.MovieService = MovieService;
 //# sourceMappingURL=movie.service.js.map

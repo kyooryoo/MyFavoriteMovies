@@ -2,14 +2,18 @@
     background-color: #CFD8DC !important;
     color: white;
 }
-.input {
-    width: 16em;
+label {
+    display: inline-block;
+    width: 3em;
+    margin: .5em 0;
+    color: #607D8B;
+    font-weight: bold;
 }
 .movies {
     margin: 0 0 2em 0;
     list-style-type: none;
     padding: 0;
-    width: 20em;
+    width: 25em;
 }
 .movies li {
     cursor: pointer;
@@ -59,4 +63,25 @@ button {
 }
 button:hover {
     background-color: #cfd8dc;
+}
+button.delete {
+    position: absolute;
+    right: 0;
+    margin-right: 5px;
+    background-color: #DDD;
+    color: white;
+}
+button.delete:hover {
+    background-color: gray !important;
+}
+#add {
+    margin-top: 1em
+}
+#movieName {
+    padding-left: .4em;
+    width: 16em;
+}
+#movieYear{
+    padding-left: .4em;
+    width: 6em;
 }

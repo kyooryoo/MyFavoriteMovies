@@ -18,12 +18,33 @@ var MoviesComponent = (function () {
     }
     MoviesComponent.prototype.getMovies = function () {
         var _this = this;
-        this.movieService.getMoviesSlowly()
+        this.movieService.getMovies()
             .then(function (movies) { return _this.movies = movies; });
     };
-    MoviesComponent.prototype.ngOnInit = function () {
-        this.getMovies();
+    MoviesComponent.prototype.add = function (name, year) {
+        var _this = this;
+        name = name.trim();
+        if (!name || !year) {
+            return;
+        }
+        this.movieService.create(name, year)
+            .then(function (movie) {
+            _this.movies.push(movie);
+            _this.selectedMovie = null;
+        });
     };
+    MoviesComponent.prototype.delete = function (movie) {
+        var _this = this;
+        this.movieService
+            .delete(movie.id)
+            .then(function () {
+            _this.movies = _this.movies.filter(function (m) { return m !== movie; });
+            if (_this.selectedMovie === movie) {
+                _this.selectedMovie = null;
+            }
+        });
+    };
+    MoviesComponent.prototype.ngOnInit = function () { this.getMovies(); };
     MoviesComponent.prototype.onSelect = function (movie) {
         this.selectedMovie = movie;
     };
@@ -37,7 +58,6 @@ MoviesComponent = __decorate([
         selector: 'my-movies',
         templateUrl: './movies.component.html',
         styleUrls: ['./movies.component.css'],
-        providers: [movie_service_1.MovieService],
     }),
     __metadata("design:paramtypes", [movie_service_1.MovieService,
         router_1.Router])

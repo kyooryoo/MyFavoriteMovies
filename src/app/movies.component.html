@@ -1,10 +1,17 @@
-<h2>My Favorite Movies</h2>
+<div id="add">
+    <label>Name:</label> <input id="movieName" #movieName /> <br />
+    <label>Year:</label> <input id="movieYear" #movieYear />
+    <button (click)="add(movieName.value, movieYear.value); 
+        movieName.value=''; movieYear.value=''">Add Movie
+    </button>
+</div>
 <ul class="movies">
-    <li *ngFor="let movie of movies"
-        [class.selected]="movie === selectedMovie"
-        (click)="onSelect(movie)">
+    <li *ngFor="let movie of movies" (click)="onSelect(movie)"
+        [class.selected]="movie === selectedMovie">
         <span class="badge">{{movie.id}}</span>
-        {{movie.name}} ({{movie.year}})
+        <span>{{movie.name}} ({{movie.year}})</span>
+        <button class="delete"
+            (click)="delete(movie); $event.stopPropagation()">x</button> 
     </li>
 </ul>
 <div *ngIf="selectedMovie">

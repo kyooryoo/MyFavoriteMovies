@@ -1,20 +1,63 @@
 import { Injectable } from '@angular/core';
+import { Headers, Http } from '@angular/http';
+import 'rxjs/add/operator/toPromise';
 import { Movie } from './movie';
-import { MOVIES } from './mock-movies';
 
 @Injectable()
 export class MovieService {
+    private headers = new Headers({'Content-Type': 'application/json'});
+    private moviesUrl = 'api/movies'; //URL to web api
+    constructor(private http: Http) {}
+
     getMovies(): Promise<Movie[]> {
-        return Promise.resolve(MOVIES);
+        return this.http.get(this.moviesUrl)
+            .toPromise()
+            .then(response => response.json().data as Movie[])
+            .catch(this.handleError);
     }
-    getMoviesSlowly(): Promise<Movie[]> {
-        return new Promise(resolve => {
-            //Simulate server latency with 2 second delay
-            setTimeout(() => resolve(this.getMovies()), 2000);
-        });
-    }
+
+    // getMoviesSlowly(): Promise<Movie[]> {
+    //     return new Promise(resolve => {
+    //         //Simulate server latency with 2 second delay
+    //         setTimeout(() => resolve(this.getMovies()), 2000);
+    //     });
+    // }
+
     getMovie(id: number): Promise<Movie> {
-        return this.getMovies()
-            .then(movies => movies.find(movie =>movie.id ===id));
+        const url = `${this.moviesUrl}/${id}`;
+        return this.http.get(url)
+            .toPromise()
+            .then(response => response.json().data as Movie)
+            .catch(this.handleError);
+    }
+
+    update(movie: Movie): Promise<Movie> {
+        const url = `${this.moviesUrl}/${movie.id}`;
+        return this.http
+            .put(url, JSON.stringify(movie), {headers: this.headers})
+            .toPromise()
+            .then(() => movie)
+            .catch(this.handleError);
+    }
+
+    create(name: string, year: number): Promise<Movie> {
+        return this.http
+            .post(this.moviesUrl, JSON. stringify({name: name, year: year}), {headers: this.headers})
+            .toPromise()
+            .then(res => res.json().data as Movie)
+            .catch(this.handleError);
+    }
+    
+    delete(id: number): Promise<void> {
+        const url = `${this.moviesUrl}/${id}`;
+        return this.http.delete(url, {headers: this.headers})
+            .toPromise()
+            .then(() => null)
+            .catch(this.handleError);
+    }
+
+    private handleError(error: any): Promise<any> {
+        console.error('An error occured', error); // for demo purpose only
+        return Promise.reject(error.message || error);
     }
 }

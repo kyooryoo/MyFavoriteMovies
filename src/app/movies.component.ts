@@ -7,7 +7,6 @@ import { MovieService } from './movie.service';
   selector: 'my-movies',
   templateUrl: './movies.component.html',
   styleUrls: [ './movies.component.css' ],
-  providers: [MovieService],
 })
 
 export class MoviesComponent implements OnInit  {
@@ -16,17 +15,33 @@ export class MoviesComponent implements OnInit  {
 
   constructor(
     private movieService: MovieService,
-    private router: Router
-  ) {}
+    private router: Router) {}
 
   getMovies(): void {
-    this.movieService.getMoviesSlowly()
+    this.movieService.getMovies()
       .then(movies => this.movies = movies);
   }
 
-  ngOnInit(): void {
-    this.getMovies();
+  add(name: string, year: number): void {
+    name = name.trim();
+    if (!name||!year) { return; }
+    this.movieService.create(name, year)
+      .then(movie => {
+        this.movies.push(movie);
+        this.selectedMovie = null;
+      });
   }
+
+  delete(movie: Movie): void {
+    this.movieService
+      .delete(movie.id)
+      .then(() => {
+        this.movies = this.movies.filter(m => m !== movie);
+        if (this.selectedMovie === movie) { this.selectedMovie = null; }
+      });
+  }
+
+  ngOnInit(): void { this.getMovies(); }
 
   onSelect(movie: Movie): void {
     this.selectedMovie = movie;

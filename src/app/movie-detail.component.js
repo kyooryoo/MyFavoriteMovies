@@ -8,11 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+require("rxjs/add/operator/switchMap");
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
-require("rxjs/add/operator/switchMap");
-var movie_1 = require("./movie");
 var movie_service_1 = require("./movie.service");
 var MovieDetailComponent = (function () {
     function MovieDetailComponent(movieService, route, location) {
@@ -23,18 +22,19 @@ var MovieDetailComponent = (function () {
     MovieDetailComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.paramMap
-            .switchMap(function (params) { return _this.movieService.getMovie(+params.get('id')); })
+            .switchMap(function (params) {
+            return _this.movieService.getMovie(+params.get('id'));
+        })
             .subscribe(function (movie) { return _this.movie = movie; });
     };
-    MovieDetailComponent.prototype.goBack = function () {
-        this.location.back();
+    MovieDetailComponent.prototype.goBack = function () { this.location.back(); };
+    MovieDetailComponent.prototype.save = function () {
+        var _this = this;
+        this.movieService.update(this.movie)
+            .then(function () { return _this.goBack(); });
     };
     return MovieDetailComponent;
 }());
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", movie_1.Movie)
-], MovieDetailComponent.prototype, "movie", void 0);
 MovieDetailComponent = __decorate([
     core_1.Component({
         selector: 'movie-detail',
